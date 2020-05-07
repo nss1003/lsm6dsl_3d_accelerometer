@@ -1,0 +1,80 @@
+Programming lsm6dsl Accelerometer and Gyroscope:
+-------------------------------------------------
+The LSM6DSL has tree operating modes:
+	* Only accelerometer active and gyroscope in power-down
+	* Only gyroscope active and accelerometer in power-down
+	* Both accelerometer and gyroscope sensors active with independent ORD
+
+Gyroscope:
+-----------
+Select operating mode in CTRL7_G register (G_HM_MODE bit) TODO
+CTRL5_C rounding values acc + gy TODO
+
+Activate the gyroscope by writing ODR_G[3:0] in CTRL2_G(0x11) (Turn on)
+Select the operating mode depends on the value of G_HM_MODE bit of CTRL7_G(0x16) register
+If G_HM_MODE = 0 --> high-performance mode for all ODR (12.5Hz up to 6.66KHz).
+
+Enable low-power and normal mode --> set G_HM_MODE = 1
+Low-power mode --> ODR (12.5,26,52Hz)
+Normal mode --> ODR (104 and 208Hz)
+
+Configure gyroscope:
+---------------------
+Write CTRL2_G = 0x60 --> 416Hz (High performance)
+Write INT1_CTRL = 0x02 --> data ready interrupt on INT1
+Reading output data registers
+
+1. Read STATUS
+2. If GDA = 0, then go to 1
+3. Read OUTX_L_G
+4. Read OUTX_H_G
+5. Read OUTY_L_G
+6. Read OUTY_H_G
+7. Read OUTZ_L_G
+8. Read OUTZ_H_G
+9. Data processing
+10. Go to 1
+
+X = OUTX_H_G<<8 | OUTX_L_G
+Y = OUTY_H_G<<8 | OUTY_L_G
+Z = OUTZ_H_G<<8 | OUTZ_L_G
+
+
+Accelerometer:
+--------------
+Select operating mode in CTRL6_C register (XL_HM_MODE bit) TODO
+
+Activate the accelerometer by writing ODR_XL[3:0] in CTRL1_XL(0x10) (Turn on)
+Select the operating mode depends on the value of XL_HM_MODE bit of CTRL6_C(0x15) register
+If XL_HM_MODE = 0 --> high-performance mode for all ODR (12.5Hz, up to 6.66KHz).
+
+Enable low-power and normal mode --> set XL_HM_MODE = 1
+Low-power mode --> ODR (1.6, 12,5, 26, 52Hz)
+Normal mode --> ODR (104 and 208Hz)
+
+CTRL3_C register : Control register
+
+Configure accelerometer:
+-------------------------
+Write CTRL1_XL = 0x60 --> 416Hz (High performance)
+Write INT1_CTRL = 0x01 --> data ready interrupt on INT1
+Reading output data registers
+
+1. Read STATUS
+2. If XLDA = 0, then go to 1
+3. Read OUTX_L_XL
+4. Read OUTX_H_XL
+5. Read OUTY_L_XL
+6. Read OUTY_H_XL
+7. Read OUTZ_L_XL
+8. Read OUTZ_H_XL
+9. Data processing
+10. Go to 1
+
+X = OUTX_H_XL<<8 | OUTX_L_XL
+Y = OUTY_H_XL<<8 | OUTY_L_XL 
+Z = OUTZ_H_XL<<8 | OUTZ_L_XL
+
+
+
+
